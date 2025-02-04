@@ -11,6 +11,7 @@ import (
 	"github.com/getgauge-contrib/gauge-go/gauge"
 	m "github.com/getgauge-contrib/gauge-go/models"
 	"github.com/getgauge-contrib/gauge-go/testsuit"
+	"github.com/openshift-pipelines/release-tests/pkg/cmd"
 	"github.com/openshift-pipelines/release-tests/pkg/oc"
 	"github.com/openshift-pipelines/release-tests/pkg/openshift"
 	"github.com/openshift-pipelines/release-tests/pkg/store"
@@ -162,6 +163,34 @@ var _ = gauge.Step("Update addon config with resolverStepActions as <resolverSte
 		oc.UpdateTektonConfig(patchData)
 	} else {
 		oc.UpdateTektonConfigwithInvalidData(patchData, expectedMessage)
+	}
+})
+
+var _ = gauge.Step("Verify versioned ecosystem tasks", func() {
+	taskList := cmd.MustSucceed("oc", "get", "task", "-n", "openshift-pipelines").Stdout()
+	requiredTasks := []string{"buildah", "git-cli", "git-clone", "kn", "kn-apply", "maven", "openshift-client", "s2i-dotnet", "s2i-go", "s2i-java", "s2i-nodejs", "s2i-perl", "s2i-php", "s2i-python", "s2i-ruby", "skopeo-copy", "tkn"}
+	requiredVersions := []string{"1-16-0", "1-17-0"}
+	for _, task := range requiredTasks {
+		for _, version := range requiredVersions {
+			taskWithVersion := task + "-" + version
+			if !strings.Contains(taskList, taskWithVersion) {
+				testsuit.T.Errorf("Failed to test versioned task, No task found: %s", taskWithVersion)
+			}
+		}
+	}
+})
+
+var _ = gauge.Step("Verify versioned stepaction tasks", func() {
+	taskList := cmd.MustSucceed("oc", "get", "stepaction", "-n", "openshift-pipelines").Stdout()
+	requiredTasks := []string{"git-clone"}
+	requiredVersions := []string{"1-16-0", "1-17-0"}
+	for _, task := range requiredTasks {
+		for _, version := range requiredVersions {
+			taskWithVersion := task + "-" + version
+			if !strings.Contains(taskList, taskWithVersion) {
+				testsuit.T.Errorf("Failed to test versioned stepaction, No stepaction found: %s", taskWithVersion)
+			}
+		}
 	}
 })
 
