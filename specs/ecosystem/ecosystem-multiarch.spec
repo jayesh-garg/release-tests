@@ -12,6 +12,8 @@ Type: Functional
 Importance: Critical
 
 Steps:
+  * Verify that QUAY_USER and QUAY_PASS environment variables are exported
+  * Create secret with image registry credentials for jib-maven
   * Create
       |S.NO|resource_dir                                          |
       |----|------------------------------------------------------|
@@ -31,6 +33,8 @@ Type: Functional
 Importance: Critical
 
 Steps:
+  * Verify that QUAY_USER and QUAY_PASS environment variables are exported
+  * Create secret with image registry credentials for jib-maven
   * Create
       |S.NO|resource_dir                                          |
       |----|------------------------------------------------------|

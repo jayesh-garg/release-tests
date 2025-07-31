@@ -4,6 +4,8 @@ metadata:
   name: jib-maven-pipeline
 spec:
   params:
+  - name: jib_maven_repository
+    description: The image repository to push to
   - name: SUBDIR
     description: where to clone the git repo
     default: jib-maven
@@ -13,13 +15,13 @@ spec:
   - name: clone-git-repo
     taskRef:
       resolver: cluster
-        params:
-        - name: kind
-          value: task
-        - name: name
-          value: git-clone
-        - name: namespace
-          value: openshift-pipelines
+      params:
+      - name: kind
+        value: task
+      - name: name
+        value: git-clone
+      - name: namespace
+        value: openshift-pipelines
     workspaces:
     - name: output
       workspace: source
@@ -33,13 +35,13 @@ spec:
   - name: build
     taskRef:
       resolver: cluster
-        params:
-        - name: kind
-          value: task
-        - name: name
-          value: jib-maven
-        - name: namespace
-          value: openshift-pipelines
+      params:
+      - name: kind
+        value: task
+      - name: name
+        value: jib-maven
+      - name: namespace
+        value: openshift-pipelines
     runAfter:
     - clone-git-repo
     workspaces:
@@ -49,7 +51,7 @@ spec:
     - name: DIRECTORY
       value: $(params.SUBDIR)
     - name: IMAGE
-      value: image-registry.openshift-image-registry.svc:5000/$(context.pipelineRun.namespace)/jib-maven
+      value: $(params.jib_maven_repository)
     - name: INSECUREREGISTRY
       value: "false"
     - name: MAVEN_IMAGE
