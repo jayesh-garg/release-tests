@@ -4,11 +4,15 @@ metadata:
   name: jib-maven-pipeline
 spec:
   params:
+  - name: jib_maven_repository
+    description: The image repository to push to
   - name: SUBDIR
     description: where to clone the git repo
     default: jib-maven
   workspaces:
   - name: source
+  - name: dockerconfig
+    optional: true
   tasks:
   - name: clone-git-repo
     taskRef:
@@ -47,10 +51,12 @@ spec:
     workspaces:
     - name: source
       workspace: source
+    - name: dockerconfig
+      workspace: dockerconfig
     params:
     - name: DIRECTORY
       value: $(params.SUBDIR)
     - name: IMAGE
-      value: image-registry.openshift-image-registry.svc:5000/$(context.pipelineRun.namespace)/jib-maven
+      value: $(params.jib_maven_repository)
     - name: INSECUREREGISTRY
       value: "false"

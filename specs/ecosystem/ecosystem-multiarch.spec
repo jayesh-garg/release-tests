@@ -22,6 +22,8 @@ Steps:
       |S.NO|pipeline_run_name|status    |check_label_propagation|
       |----|-----------------|----------|-----------------------|
       |1   |jib-maven-run    |successful|no                     |
+  * Verify that jib-maven image registry variable is exported
+  * Create secret with image registry credentials for jib-maven
 
 ## jib-maven P&Z pipelinerun: PIPELINES-32-TC02
 Tags: linux/ppc64le, linux/s390x, linux/arm64, ecosystem, non-admin, jib-maven, sanity
@@ -41,6 +43,8 @@ Steps:
       |S.NO|pipeline_run_name|status    |check_label_propagation|
       |----|-----------------|----------|-----------------------|
       |1   |jib-maven-pz-run |successful|no                     |
+  * Verify that jib-maven image registry variable is exported
+  * Create secret with image registry credentials for jib-maven
 
 ## kn-apply pipelinerun: PIPELINES-32-TC03
 Tags: e2e, linux/amd64, ecosystem, non-admin, kn-apply

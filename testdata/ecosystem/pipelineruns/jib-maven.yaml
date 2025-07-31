@@ -3,11 +3,17 @@ kind: PipelineRun
 metadata:
   name: jib-maven-run
 spec:
+  params:
+  - name: jib_maven_repository
+    value: quay.io/openshift-pipeline/jib-maven
   pipelineRef:
     name: jib-maven-pipeline
   workspaces:
   - name: source
     persistentVolumeClaim:
       claimName: shared-pvc
+  - name: dockerconfig
+    secret:
+      secretName: jib-maven-image-registry-credentials
   timeouts: 
     pipeline: 15m
