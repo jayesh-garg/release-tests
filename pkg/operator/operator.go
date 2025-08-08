@@ -3,6 +3,7 @@ package operator
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/getgauge-contrib/gauge-go/testsuit"
@@ -15,6 +16,7 @@ import (
 	"github.com/openshift-pipelines/release-tests/pkg/opc"
 	"github.com/openshift-pipelines/release-tests/pkg/store"
 	"github.com/tektoncd/operator/test/utils"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func WaitForTektonConfigCR(cs *clients.Clients, rnames utils.ResourceNames) {
@@ -121,4 +123,17 @@ func Uninstall(cs *clients.Clients, rnames utils.ResourceNames) {
 	)
 	k8s.ValidateSCCRemoved(cs, rnames.TargetNamespace, config.PipelineControllerName)
 	olm.OperatorCleanup(cs, config.Flags.SubscriptionName)
+}
+
+func VerifyNumberOfRoles(cs *clients.Clients, namespace, expectedCount string) {
+	log.Printf("Verifying total number of roles in namespace %s is %s", namespace, expectedCount)
+	roles, err := cs.KubeClient.Kube.RbacV1().Roles(namespace).List(cs.Ctx, metav1.ListOptions{})
+	if err != nil {
+		testsuit.T.Fail(fmt.Errorf("failed to get roles in namespace %s: %v", namespace, err))
+	}
+
+	if strconv.Itoa(len(roles.Items)) != expectedCount {
+		testsuit.T.Fail(fmt.Errorf("expected %s roles, but found %d roles in namespace %s", expectedCount, len(roles.Items), namespace))
+	}
+	log.Printf("Found %d roles in namespace %s, which matches the expected count of %s", len(roles.Items), namespace, expectedCount)
 }

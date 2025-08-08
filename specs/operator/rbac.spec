@@ -20,3 +20,45 @@ Steps:
   * Verify RBAC resources disabled successfully
   * Update TektonConfig CR to use param with name createRbacResource and value "true" to "enable" auto creation of RBAC resources
   * Verify RBAC resources are auto created successfully
+
+## Verify RBAC resources for non-admin user: PIPELINES-11-TC02
+Tags: e2e, rbac-disable, admin, sanity
+Component: Operator
+Level: Integration
+Type: Functional
+Importance: High
+
+This scenario helps you to verify RBAC resources for non-admin user.
+
+Steps:
+  * Verify the following roles are present in namespace "openshift-pipelines":
+    | Role Name                                 |
+    | tekton-ecosystem-task-list-role           |
+    | tekton-chains-info                        |
+    | tekton-chains-leader-election             |
+    | tekton-default-openshift-pipelines-view   |
+    | tekton-ecosystem-stepaction-list-role     |
+    | tekton-hub-info                           |
+    | tekton-operators-proxy-admin              |
+    | tekton-pipelines-controller               |  
+    | tekton-pipelines-events-controller        |
+    | tekton-pipelines-info                     |
+    | tekton-pipelines-leader-election          |
+    | tekton-pipelines-resolvers-namespace-rbac |
+    | tekton-pipelines-webhook                  |
+    | tekton-results-info                       |
+    | tekton-triggers-admin-webhook             |
+    | tekton-triggers-core-interceptors         |
+    | tekton-triggers-info                      |
+
+## Verify total number of roles: PIPELINES-11-TC03
+Tags: e2e, rbac-disable, admin, sanity
+Component: Operator
+Level: Integration
+Type: Functional
+Importance: High
+
+This scenario helps you to verify the total number of roles in openshift-pipelines namespace.
+
+Steps:
+  * Verify total number of roles in namespace "openshift-pipelines" is "26"
